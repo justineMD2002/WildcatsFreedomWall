@@ -5,13 +5,11 @@ function Modal({ onAccept, onDecline }) {
 
   const handleAccept = () => {
     setModalVisible(!isModalVisible);
-    // Call the onAccept callback
     onAccept();
   };
 
   const handleDecline = () => {
     setModalVisible(!isModalVisible);
-    // Call the onDecline callback
     onDecline();
   };
 

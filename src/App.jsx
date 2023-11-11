@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Navbar from "./components/Navbar";
 import Walletbutton from "./components/Walletbutton";
 import Feed from "./components/Feed";
 import Modal from "./components/Modal";
-import Addpost from "./components/Addpost";
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { Program, AnchorProvider, web3 } from '@project-serum/anchor';
 import kp from './keypair.json'
@@ -39,18 +36,10 @@ function App() {
     }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleAddPost = (inputValue) => {
-    setInputValue(inputValue);
-  };
-
   const handleAccept = () => {
     createPostAccount();
     setIsModalOpen(false);
-    setInputValue(""); // Reset input value
+    setInputValue(""); 
   };
 
   const handleDecline = () => {
@@ -71,18 +60,16 @@ function App() {
       const { solana } = window;
       const response = await solana.connect();
       setwalletAddress(response.publicKey.toString());
-      // Only call getPostList if the wallet is successfully connected
       setIsLoading(true);
       await getPostList();
     } catch (error) {
       setIsModalOpen(true);
-      alert("You have no wallet in your browser 😭...");
+      alert("You have no wallet in your browser T_T...");
     } finally {
-      setIsLoading(false); // Set loading to false once the operation is done
+      setIsLoading(false); 
     }
   };
   
-
   const getPostList = async () => {
     try {
       setIsLoading(true);
@@ -92,15 +79,14 @@ function App() {
       const account = await program.account.postAccount.fetch(postAccount.publicKey);
   
       console.log("Got the account!", account);
-      console.log("Post List:", account.postList); // Add this line
+      console.log("Post List:", account.postList); 
   
-      // Update the local postList state with the fetched posts
       setPostList(account.postList);
     } catch (error) {
       console.log("Error in getPostList: ", error);
-      setPostList([]); // Set postList to an empty array in case of an error
+      setPostList([]); 
     } finally {
-      setIsLoading(false); // Set loading to false once the operation is done
+      setIsLoading(false); 
     }
   };
 
@@ -117,15 +103,12 @@ function App() {
       const provider = getProvider();
       const program = await getProgram();
   
-      // Send post to the program
       await program.rpc.addPost(inputValue, {
         accounts: {
           postAccount: postAccount.publicKey,
           user: provider.wallet.publicKey,
         },
       });
-  
-      // Fetch the updated post list
       console.log("Post successfully sent to program", inputValue);
       setInputValue("");
       await getPostList();
@@ -134,7 +117,6 @@ function App() {
       window.location.reload();
       console.log("Error in posting: ", error);
     } finally {
-      // Reset the inputValue
       setInputValue("");
     }
   };
@@ -160,7 +142,7 @@ function App() {
         },
         signers: [postAccount]
       })
-      console.log("Created a new post account w/ address:", postAccount.publicKey.toString());
+      console.log("Created a new post account with address:", postAccount.publicKey.toString());
       await getPostList()
     } catch (error) {
       console.log("Error in creating post account account: ", error);
